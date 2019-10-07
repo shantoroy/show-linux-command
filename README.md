@@ -5,7 +5,6 @@
 * [Setup](#setup)
 * [Synopsis](#Synopsis)
 * [Examples](#Examples)
-* [Author](#Author)
 * [Credits](#Credits)
 
 
@@ -16,7 +15,9 @@
 
 ## Setup
 Run `install.sh` to use **show** as a command.
+
 Setup includes copying the command in `\bin` and a man-page in `/usr/share/man/man1` directory.
+
 If not executable, run `chmod +x install.sh`.
 
 ## Synopsis
