@@ -200,12 +200,12 @@ int main(int args, char *argv[])
             {
                 // better to use read/write instead of printf/scanf/getch
                 int	input = open("/dev/tty", O_RDWR);  // opens a terminal with read and write permission
-                write(input, "Enter 'y' to continue, other to quit: ", 38);  // 38 characters to write
+                write(input, "Enter 'c+Return' to continue, other to quit: ", 45);  // 45 characters to write
 	            char byte;
                 ssize_t size = read(input, &byte, sizeof(char)*2);           // two characters include any character and Enter
 
                 // collects user input
-                if(byte == 'y')
+                if(byte == 'c')
                 {
                     printf("%s", line);
                     end = end + n_flag;

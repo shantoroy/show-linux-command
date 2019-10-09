@@ -1,3 +1,8 @@
+# OS Assignment - 01
+## Name - Shanto Roy
+## PSID - 1894941
+
+
 ## About
 **show** is a Linux command that presents information line by line (usually 20 lines iteration) from a command output. It also presents any number of lines using option with a number preceded by "-". It requires minimum 2 arguments to successfully run the command. A man-page is also included as a man1 entry.
 
