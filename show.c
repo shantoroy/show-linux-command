@@ -45,6 +45,19 @@ bool startswith(char *string, char *substring)
     }
 }
 
+// function checks if a string is an int
+bool isadigit(char *string)
+{
+    if (!isdigit(string[0]))
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
 // main function starts from here...
 int main(int args, char *argv[])
 {
@@ -52,8 +65,8 @@ int main(int args, char *argv[])
     int mypipefd[2];
     int ret;
     char file_name[100];
-    int n_flag = 20;
-    int n;
+    int n_flag;
+    int n=20;
     
     char* path_list = malloc(sizeof(char)* 1024);
     // getenv provides all paths separated with a ":" through PATH variable
@@ -79,10 +92,21 @@ int main(int args, char *argv[])
             n = str_2_int(remove_first_char(argv[1]));  // get value for n_flag
             custom_argv = &argv[2];                     // use a custom argv to start from the command
         }
+        else if(startswith(argv[1],"-") != 1)
+        {
+            if(isadigit(argv[1]) == 1)
+            {
+                printf("Bad Flag!!!\nSee more using 'man show'\n");
+                exit(1);
+            }
+            else
+            {
+                custom_argv = &argv[1];
+            }
+        }
         else
         {
-            printf("Bad Flag!!!\nSee more using 'man show'\n");
-            exit(1);
+            custom_argv = &argv[1];
         }
     }
 
@@ -125,21 +149,22 @@ int main(int args, char *argv[])
         //char *extensions[3] = {file_name, argv[2], NULL}; --> it's not a good practice
         execv( file_name, custom_argv );                // executes execv with the filename and arguments are later in argv
     }
-
     // Parent Process
     close(mypipefd[1]);                                 // closes unused write in
     wait(NULL);
+    close(0);
     dup2(mypipefd[0], STDIN_FILENO);                    // dup into stdin
+    close(mypipefd[0]);
 
     char *line = NULL;
-    size_t size = 50;
+    size_t size = 200;
     char str[100];
 
     // Open a hidden file in tmp directory and store result line by line
     FILE *fp = fopen("/tmp/.os.txt", "w");              // opens the file in write mode
-     if (getline(&line, &size, stdin) == -1)            // if fails to get line by line from stdin
+    if (getline(&line, &size, stdin) == -1)            // if fails to get line by line from stdin
     {
-        char *text = "No line";
+        char *text = "No line\n";
         fputs(text, fp);                                // writes in the file
         fclose(fp);                                     // closes the file
     } 
@@ -154,7 +179,7 @@ int main(int args, char *argv[])
         }
         fclose(fp);                                     // closes the file
     }
-      
+
     FILE *file = fopen("/tmp/.os.txt", "r");            // opens the file in read mode
     int start = 1;
     // Don't know why but directly using n sets a default value of 10
@@ -194,7 +219,7 @@ int main(int args, char *argv[])
         }
         fclose(file);
     }
-
+    remove("/tmp/.os.txt");                             // removes the file
     // free(path_list);                                 // frees the allocated memory
     close(mypipefd[0]);
     close(mypipefd[1]);
